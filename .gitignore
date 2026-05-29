@@ -1,0 +1,20 @@
+# IDE
+.idea/
+*.iml
+.mvn/
+.settings/
+.project
+.classpath
+.DS_Store
+
+# Java 后端
+backend/target/
+backend/*.log
+
+# Node 前端
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# 系统文件
+Thumbs.db
