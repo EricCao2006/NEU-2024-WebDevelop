@@ -14,9 +14,9 @@ public class UserService {
     @Autowired
     private UserMapper userMapper;
 
-    public Map<String, Object> login(String username, String password) {
+    public Map<String, Object> login(String phone, String password) {
         QueryWrapper<User> wrapper = new QueryWrapper<>();
-        wrapper.eq("username", username).eq("password", password);
+        wrapper.eq("phone", phone).eq("password", password);
         User user = userMapper.selectOne(wrapper);
 
         Map<String, Object> result = new HashMap<>();
@@ -26,9 +26,10 @@ public class UserService {
             result.put("userId", user.getId());
             result.put("username", user.getUsername());
             result.put("address", user.getAddress());
+            result.put("phone", user.getPhone());
         } else {
             result.put("success", false);
-            result.put("message", "用户名或密码错误");
+            result.put("message", "手机号或密码错误");
         }
         return result;
     }

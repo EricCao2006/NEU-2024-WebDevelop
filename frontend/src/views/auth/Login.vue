@@ -1,0 +1,124 @@
+<template>
+  <div class="auth-container">
+    <div class="auth-card">
+      <h2 class="auth-title">登录</h2>
+      <input v-model="phone" placeholder="手机号" class="input" />
+      <input v-model="password" type="password" placeholder="密码" class="input" />
+      <button @click="login" class="btn btn-primary btn-login">登录</button>
+      <p class="auth-link">没有账号？<router-link to="/register">立即注册</router-link></p>
+      <p class="auth-test">测试账号：13942214892 / 2801132199</p>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, inject } from 'vue'
+import { useRouter } from 'vue-router'
+import axios from 'axios'
+
+const router = useRouter()
+const phone = ref('')
+const password = ref('')
+
+// 注入 dialog 组件实例
+const dialog: any = inject('dialog')
+
+async function login() {
+  try {
+    const res = await axios.post('http://localhost:8080/api/users/login', null, {
+      params: { phone: phone.value, password: password.value }
+    })
+    if (res.data.success) {
+      localStorage.setItem('user', JSON.stringify(res.data))
+      if (dialog?.value) {
+        dialog.value.show('登录成功', '欢迎回来！')
+      }
+      router.push('/')
+    } else {
+      if (dialog?.value) {
+        dialog.value.show('登录失败', res.data.message || '用户名或密码错误')
+      } else {
+        alert(res.data.message || '登录失败')
+      }
+    }
+  } catch (err) {
+    if (dialog?.value) {
+      dialog.value.show('登录失败', '网络错误，请稍后重试')
+    } else {
+      alert('登录失败')
+    }
+  }
+}
+</script>
+
+<style scoped>
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 200px);
+}
+
+.auth-card {
+  max-width: 400px;
+  width: 100%;
+  padding: 32px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 32px;
+  box-shadow: var(--shadow-md);
+}
+
+.auth-title {
+  text-align: center;
+  margin-bottom: 24px;
+  color: var(--text-primary);
+}
+
+.input {
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  color: var(--text-primary);
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s;
+  margin-bottom: 16px;
+  box-sizing: border-box;
+}
+
+.input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.2);
+}
+
+.input::placeholder {
+  color: var(--text-muted);
+}
+
+.btn-login {
+  width: 120px;
+  padding: 10px 0;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 32px;
+  margin: 0 auto;
+  display: block;
+}
+
+
+.auth-link {
+  text-align: center;
+  margin-top: 16px;
+  color: var(--text-secondary);
+}
+
+.auth-test {
+  text-align: center;
+  margin-top: 24px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+</style>
