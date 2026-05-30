@@ -1,9 +1,7 @@
 package com.ec.onlinestore.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ec.onlinestore.entity.User;
 import com.ec.onlinestore.mapper.UserMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
@@ -12,8 +10,11 @@ import java.util.Map;
 @RequestMapping("/api/admin")
 public class AdminUserController {
 
-    @Autowired
-    private UserMapper userMapper;
+    private final UserMapper userMapper;
+
+    public AdminUserController(UserMapper userMapper) {
+        this.userMapper = userMapper;
+    }
 
     // 获取所有用户
     @GetMapping("/users")

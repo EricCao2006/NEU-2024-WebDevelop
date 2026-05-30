@@ -51,7 +51,7 @@ import { useRouter, useRoute } from 'vue-router'
 import axios from 'axios'
 import AddressDialog from '../../components/AddressDialog.vue'
 import ProductSelectDialog from '../../components/ProductSelectDialog.vue'
-import { useUser } from '../../composables/useUser'
+import { useUser } from '@/composables/useUser.ts'
 
 interface Product {
   id: number

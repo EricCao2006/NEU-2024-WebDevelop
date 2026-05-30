@@ -66,7 +66,7 @@
 import { ref, onMounted, inject } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
-import { useUser } from '../../composables/useUser'
+import { useUser } from '@/composables/useUser.ts'
 
 const router = useRouter()
 const dialog: any = inject('dialog')

@@ -3,7 +3,6 @@ package com.ec.onlinestore.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ec.onlinestore.entity.User;
 import com.ec.onlinestore.mapper.UserMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,8 +10,11 @@ import java.util.Map;
 @Service
 public class UserService {
 
-    @Autowired
-    private UserMapper userMapper;
+    private final UserMapper userMapper;
+
+    public UserService(UserMapper userMapper) {
+        this.userMapper = userMapper;
+    }
 
     public Map<String, Object> login(String phone, String password) {
         QueryWrapper<User> wrapper = new QueryWrapper<>();

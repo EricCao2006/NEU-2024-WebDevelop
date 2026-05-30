@@ -3,7 +3,6 @@ package com.ec.onlinestore.controller;
 import com.ec.onlinestore.entity.User;
 import com.ec.onlinestore.mapper.UserMapper;
 import com.ec.onlinestore.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;
@@ -12,11 +11,14 @@ import java.util.Map;
 @RequestMapping("/api/users")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private UserMapper userMapper;  // 注册功能需要
+    private final UserMapper userMapper;  // 注册功能需要
+
+    public UserController(UserService userService, UserMapper userMapper) {
+        this.userService = userService;
+        this.userMapper = userMapper;
+    }
 
     @PostMapping("/login")
     public Map<String, Object> login(@RequestParam String phone, @RequestParam String password) {

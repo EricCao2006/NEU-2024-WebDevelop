@@ -8,23 +8,23 @@ declare module 'vue-router' {
 }
 
 // 普通用户页面
-import CustomerHome from '../views/customer/CustomerHome.vue'
-import Login from '../views/auth/Login.vue'
-import Register from '../views/auth/Register.vue'
-import Cart from '../views/customer/Cart.vue'
-import MyOrders from '../views/customer/MyOrders.vue'
-import Profile from '../views/customer/Profile.vue'
+import CustomerHome from './views/customer/CustomerHome.vue'
+import Login from './views/auth/Login.vue'
+import Register from './views/auth/Register.vue'
+import Cart from './views/customer/Cart.vue'
+import MyOrders from './views/customer/MyOrders.vue'
+import Profile from './views/customer/Profile.vue'
 
 // 商家页面
-import MerchantHome from '../views/merchant/MerchantHome.vue'
-import MerchantProducts from '../views/merchant/MerchantProducts.vue'
-import MerchantStock from '../views/merchant/MerchantStock.vue'
-import MerchantStatistics from '../views/merchant/MerchantStatistics.vue'
-import MerchantOrders from '../views/merchant/MerchantOrders.vue'
+import MerchantHome from './views/merchant/MerchantHome.vue'
+import MerchantProducts from './views/merchant/MerchantProducts.vue'
+import MerchantStock from './views/merchant/MerchantStock.vue'
+import MerchantStatistics from './views/merchant/MerchantStatistics.vue'
+import MerchantOrders from './views/merchant/MerchantOrders.vue'
 
 // 管理员页面
-import AdminHome from '../views/admin/AdminHome.vue'
-import AdminUsers from '../views/admin/AdminUsers.vue'
+import AdminHome from './views/admin/AdminHome.vue'
+import AdminUsers from './views/admin/AdminUsers.vue'
 
 const routes: RouteRecordRaw[] = [
     // 公共页面（无需登录）
@@ -36,7 +36,7 @@ const routes: RouteRecordRaw[] = [
     { path: '/cart', name: 'Cart', component: Cart, meta: { roles: ['customer', 'merchant', 'admin'] } },
     { path: '/orders', name: 'MyOrders', component: MyOrders, meta: { roles: ['customer'] } },
     { path: '/profile', name: 'Profile', component: Profile, meta: { roles: ['customer', 'merchant', 'admin'] } },
-    { path: '/product/:id', name: 'ProductDetail', component: () => import('../views/customer/ProductDetail.vue'), meta: { roles: ['customer', 'merchant', 'admin'] } },
+    { path: '/product/:id', name: 'ProductDetail', component: () => import('./views/customer/ProductDetail.vue'), meta: { roles: ['customer', 'merchant', 'admin'] } },
 
     // 商家页面
     { path: '/merchant', name: 'MerchantHome', component: MerchantHome, meta: { roles: ['merchant'] } },

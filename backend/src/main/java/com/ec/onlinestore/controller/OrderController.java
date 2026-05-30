@@ -5,36 +5,36 @@ import com.ec.onlinestore.entity.Order;
 import com.ec.onlinestore.entity.Product;
 import com.ec.onlinestore.entity.User;
 import java.util.stream.Collectors;
-import com.ec.onlinestore.entity.Product;
+
 import com.ec.onlinestore.mapper.ProductMapper;
 import com.ec.onlinestore.mapper.UserMapper;
 import com.ec.onlinestore.mapper.OrderMapper;
-import com.ec.onlinestore.mapper.ProductMapper;
 import com.ec.onlinestore.service.OrderService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/orders")
 public class OrderController {
 
-    @Autowired
-    private OrderService orderService;
+    private final OrderService orderService;
 
-    @Autowired
-    private OrderMapper orderMapper;
+    private final OrderMapper orderMapper;
 
-    @Autowired
-    private ProductMapper productMapper;
+    private final ProductMapper productMapper;
 
-    @Autowired
-    private UserMapper userMapper;
+    private final UserMapper userMapper;
+
+    public OrderController(OrderService orderService, OrderMapper orderMapper, ProductMapper productMapper, UserMapper userMapper) {
+        this.orderService = orderService;
+        this.orderMapper = orderMapper;
+        this.productMapper = productMapper;
+        this.userMapper = userMapper;
+    }
 
     @PostMapping
     public Map<String, Object> createOrder(@RequestBody Order order) {

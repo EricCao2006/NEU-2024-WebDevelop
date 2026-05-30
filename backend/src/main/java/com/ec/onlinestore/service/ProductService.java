@@ -4,15 +4,17 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.ec.onlinestore.entity.Product;
 import com.ec.onlinestore.mapper.ProductMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
 public class ProductService {
 
-    @Autowired
-    private ProductMapper productMapper;
+    private final ProductMapper productMapper;
+
+    public ProductService(ProductMapper productMapper) {
+        this.productMapper = productMapper;
+    }
 
     public List<Product> getAllProducts() {
         return productMapper.selectList(null);
@@ -35,10 +37,6 @@ public class ProductService {
 
     public boolean addProduct(Product product) {
         return productMapper.insert(product) > 0;
-    }
-    public boolean updateProduct(Integer id, Product product) {
-        product.setId(id);
-        return productMapper.updateById(product) > 0;
     }
 
     public boolean deleteProduct(Integer id) {

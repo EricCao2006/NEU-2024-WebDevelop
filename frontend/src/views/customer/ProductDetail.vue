@@ -205,8 +205,7 @@ function handleProductConfirm(data: { skuId: number; skuName: string; price: num
 .detail-container {
   max-width: 600px;
   margin: 0 auto;
-  padding: 20px;
-  padding-bottom: 80px;
+  padding: 20px 20px 80px;
 }
 
 .product-header {
@@ -368,8 +367,7 @@ function handleProductConfirm(data: { skuId: number; skuName: string; price: num
 .detail-container {
   max-width: 600px;
   margin: 0 auto;
-  padding: 20px;
-  padding-bottom: 80px;
+  padding: 20px 20px 80px;
 }
 
 .page-header {

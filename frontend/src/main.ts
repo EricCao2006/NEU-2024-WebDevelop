@@ -1,9 +1,9 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import router from './router'
+import router from './index.ts'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
-import './styles/theme.css'
+import './theme.css'
 
 const app = createApp(App)
 app.use(router)

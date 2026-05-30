@@ -1,12 +1,10 @@
 package com.ec.onlinestore.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.ec.onlinestore.entity.Product;
 import com.ec.onlinestore.entity.ProductSku;
 import com.ec.onlinestore.mapper.ProductSkuMapper;
 import com.ec.onlinestore.service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -18,11 +16,14 @@ import java.util.Map;
 @RequestMapping("/api/products")
 public class ProductController {
 
-    @Autowired
-    private ProductService productService;
+    private final ProductService productService;
 
-    @Autowired
-    private ProductSkuMapper productSkuMapper;
+    private final ProductSkuMapper productSkuMapper;
+
+    public ProductController(ProductService productService, ProductSkuMapper productSkuMapper) {
+        this.productService = productService;
+        this.productSkuMapper = productSkuMapper;
+    }
 
     // 获取所有商品（含最低价）
     @GetMapping

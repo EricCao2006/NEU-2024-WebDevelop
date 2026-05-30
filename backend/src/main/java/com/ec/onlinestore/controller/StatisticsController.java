@@ -5,7 +5,6 @@ import com.ec.onlinestore.entity.Order;
 import com.ec.onlinestore.entity.Product;
 import com.ec.onlinestore.mapper.OrderMapper;
 import com.ec.onlinestore.mapper.ProductMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.util.*;
@@ -15,11 +14,14 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/statistics")
 public class StatisticsController {
 
-    @Autowired
-    private OrderMapper orderMapper;
+    private final OrderMapper orderMapper;
 
-    @Autowired
-    private ProductMapper productMapper;
+    private final ProductMapper productMapper;
+
+    public StatisticsController(OrderMapper orderMapper, ProductMapper productMapper) {
+        this.orderMapper = orderMapper;
+        this.productMapper = productMapper;
+    }
 
     // 销售额排行（商家的商品）
     @GetMapping("/sales-rank/{userId}")

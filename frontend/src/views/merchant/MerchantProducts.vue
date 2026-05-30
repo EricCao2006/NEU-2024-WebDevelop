@@ -191,8 +191,7 @@ function closeDialog() {
 .merchant-products {
   max-width: 800px;
   margin: 0 auto;
-  padding: 20px;
-  padding-bottom: 80px;
+  padding: 20px 20px 80px;
 }
 
 /* 页面头部 */
