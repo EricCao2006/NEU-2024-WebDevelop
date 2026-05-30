@@ -6,7 +6,6 @@
       <input v-model="password" type="password" placeholder="密码" class="input" />
       <button @click="login" class="btn btn-primary btn-login">登录</button>
       <p class="auth-link">没有账号？<router-link to="/register">立即注册</router-link></p>
-      <p class="auth-test">测试账号：13800138001(商家) / 13800000000(管理员)</p>
     </div>
   </div>
 </template>

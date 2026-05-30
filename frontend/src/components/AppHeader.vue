@@ -7,7 +7,7 @@
       <router-link to="/admin" class="logo" v-else-if="user?.role === 'admin'">👑 管理后台</router-link>
     </div>
 
-    <div class="header-center" v-if="user?.role !== 'merchant'">
+    <div class="header-center" v-if="user?.role === 'customer'">
       <div class="search-box">
         <input
             type="text"
