@@ -6,7 +6,7 @@
       <input v-model="password" type="password" placeholder="密码" class="input" />
       <button @click="login" class="btn btn-primary btn-login">登录</button>
       <p class="auth-link">没有账号？<router-link to="/register">立即注册</router-link></p>
-      <p class="auth-test">测试账号：13942214892 / 2801132199</p>
+      <p class="auth-test">测试账号：13800138001(商家) / 13800000000(管理员)</p>
     </div>
   </div>
 </template>
@@ -15,13 +15,13 @@
 import { ref, inject } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
+import { useUser } from '../../composables/useUser'
 
 const router = useRouter()
 const phone = ref('')
 const password = ref('')
-
-// 注入 dialog 组件实例
 const dialog: any = inject('dialog')
+const { setUser } = useUser()
 
 async function login() {
   try {
@@ -29,24 +29,31 @@ async function login() {
       params: { phone: phone.value, password: password.value }
     })
     if (res.data.success) {
-      localStorage.setItem('user', JSON.stringify(res.data))
-      if (dialog?.value) {
-        dialog.value.show('登录成功', '欢迎回来！')
+      const userData = {
+        userId: res.data.userId,
+        username: res.data.username,
+        role: res.data.role,
+        address: res.data.address,
+        phone: res.data.phone,
+        success: true
       }
-      router.push('/')
+      setUser(userData)
+      dialog?.value?.show('登录成功', '欢迎回来！')
+      setTimeout(() => {
+        const role = res.data.role
+        if (role === 'merchant') {
+          router.push('/merchant')
+        } else if (role === 'admin') {
+          router.push('/admin')
+        } else {
+          router.push('/')
+        }
+      }, 500)
     } else {
-      if (dialog?.value) {
-        dialog.value.show('登录失败', res.data.message || '用户名或密码错误')
-      } else {
-        alert(res.data.message || '登录失败')
-      }
+      dialog?.value?.show('登录失败', res.data.message || '用户名或密码错误')
     }
   } catch (err) {
-    if (dialog?.value) {
-      dialog.value.show('登录失败', '网络错误，请稍后重试')
-    } else {
-      alert('登录失败')
-    }
+    dialog?.value?.show('登录失败', '网络错误，请稍后重试')
   }
 }
 </script>

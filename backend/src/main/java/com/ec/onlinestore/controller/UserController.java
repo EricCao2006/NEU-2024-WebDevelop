@@ -10,7 +10,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
-@CrossOrigin(origins = "*")
 public class UserController {
 
     @Autowired
@@ -38,7 +37,7 @@ public class UserController {
         if (userMapper.selectCount(wrapper) > 0) {
             return Map.of("success", false, "message", "手机号已注册");
         }
-        user.setRole("user");
+        user.setRole("customer");
         int rows = userMapper.insert(user);
         return Map.of("success", rows > 0);
     }
@@ -74,5 +73,11 @@ public class UserController {
         user.setPassword(password);
         int rows = userMapper.updateById(user);
         return Map.of("success", rows > 0);
+    }
+
+    // 根据ID获取用户信息（供详情页获取商家信息）
+    @GetMapping("/{id}")
+    public User getUserById(@PathVariable Integer id) {
+        return userMapper.selectById(id);
     }
 }

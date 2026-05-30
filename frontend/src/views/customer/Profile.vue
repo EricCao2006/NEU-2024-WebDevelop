@@ -1,7 +1,13 @@
 <template>
   <div class="profile-container">
     <div class="profile-card">
-      <h2>个人中心</h2>
+      <div class="page-header">
+        <button class="back-button" @click="goBack">
+          <span class="back-icon"><</span>
+          <span class="back-text">返回</span>
+        </button>
+        <h2 class="page-title">个人中心</h2>
+      </div>
 
       <!-- 头像行（头像 + 头像文字） -->
       <div class="avatar-row">
@@ -111,6 +117,10 @@ onMounted(() => {
     user.value = JSON.parse(userStr)
   }
 })
+
+function goBack() {
+  router.back()
+}
 
 const phoneDisplay = computed(() => {
   if (!user.value?.phone) return '未绑定'
@@ -270,9 +280,46 @@ function closeEditDialog() {
   box-shadow: var(--shadow-md);
 }
 
-.profile-card h2 {
-  text-align: center;
+/* 页面头部 */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
   margin-bottom: 32px;
+}
+
+.back-button {
+  position: absolute;
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 32px;
+  cursor: pointer;
+  color: var(--text-primary);
+  transition: background 0.2s;
+}
+
+.back-button:hover {
+  background: var(--bg-secondary);
+}
+
+.back-icon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.back-text {
+  font-size: 14px;
+}
+
+.page-title {
+  margin: 0;
+  font-size: 24px;
   color: var(--text-primary);
 }
 

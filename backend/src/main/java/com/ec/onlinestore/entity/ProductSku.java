@@ -5,18 +5,14 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 @Data
-@TableName("orders")
-public class Order {
+@TableName("product_sku")
+public class ProductSku {
     @TableId(type = IdType.AUTO)
     private Integer id;
-    private Integer userId;
     private Integer productId;
     private String skuName;
-    private Integer quantity;
-    private BigDecimal totalPrice;
-    private String orderStatus;  // waiting_ship, shipped, delivered, refunding, refunded
-    private LocalDateTime orderTime;
+    private BigDecimal price;
+    private Integer stock;
 }

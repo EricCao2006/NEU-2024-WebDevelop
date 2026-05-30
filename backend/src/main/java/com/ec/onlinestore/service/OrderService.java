@@ -16,7 +16,7 @@ public class OrderService {
 
     public boolean createOrder(Order order) {
         order.setOrderTime(LocalDateTime.now());
-        order.setStatus("pending");
+        order.setOrderStatus("pending");
         return orderMapper.insert(order) > 0;
     }
 
@@ -33,7 +33,7 @@ public class OrderService {
     public boolean updateOrderStatus(Integer id, String status) {
         Order order = orderMapper.selectById(id);
         if (order != null) {
-            order.setStatus(status);
+            order.setOrderStatus(status);
             return orderMapper.updateById(order) > 0;
         }
         return false;

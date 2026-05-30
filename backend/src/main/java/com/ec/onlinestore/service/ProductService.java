@@ -26,10 +26,16 @@ public class ProductService {
         return productMapper.selectList(wrapper);
     }
 
+    // 获取商家的商品
+    public List<Product> getProductsByMerchant(Integer userId) {
+        QueryWrapper<Product> wrapper = new QueryWrapper<>();
+        wrapper.eq("user_id", userId);
+        return productMapper.selectList(wrapper);
+    }
+
     public boolean addProduct(Product product) {
         return productMapper.insert(product) > 0;
     }
-
     public boolean updateProduct(Integer id, Product product) {
         product.setId(id);
         return productMapper.updateById(product) > 0;
@@ -37,5 +43,9 @@ public class ProductService {
 
     public boolean deleteProduct(Integer id) {
         return productMapper.deleteById(id) > 0;
+    }
+
+    public Product getById(Integer id) {
+        return productMapper.selectById(id);
     }
 }

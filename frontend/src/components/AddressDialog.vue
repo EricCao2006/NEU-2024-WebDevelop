@@ -2,7 +2,7 @@
   <div v-if="visible" class="dialog-overlay" @click.self="close">
     <div class="dialog-container">
       <div class="dialog-header">
-        <h3>📦 填写收货地址</h3>
+        <h3>填写收货地址</h3>
       </div>
       <div class="dialog-body">
         <input
@@ -58,7 +58,7 @@ function confirm() {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: var(--overlay);
   display: flex;
   align-items: center;
   justify-content: center;

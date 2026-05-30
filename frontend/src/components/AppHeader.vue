@@ -1,10 +1,13 @@
 <template>
   <header class="app-header">
     <div class="header-left">
-      <router-link to="/" class="logo">🛒 线上商城</router-link>
+      <router-link to="/" class="logo" v-if="!user">🛒 Vue商城</router-link>
+      <router-link to="/" class="logo" v-else-if="user?.role === 'customer'">🛒 Vue商城</router-link>
+      <router-link to="/merchant" class="logo" v-else-if="user?.role === 'merchant'">🛒 商家中心</router-link>
+      <router-link to="/admin" class="logo" v-else-if="user?.role === 'admin'">👑 管理后台</router-link>
     </div>
 
-    <div class="header-center">
+    <div class="header-center" v-if="user?.role !== 'merchant'">
       <div class="search-box">
         <input
             type="text"
@@ -18,48 +21,49 @@
     </div>
 
     <div class="header-right">
-      <router-link v-if="user" to="/cart" class="nav-icon">
-        🛒 <span v-if="cartCount > 0" class="cart-badge">{{ cartCount }}</span>
-        <span class="nav-text">购物车</span>
-      </router-link>
+      <!-- 商家专属顶栏 -->
+      <template v-if="user?.role === 'merchant'">
+        <router-link to="/merchant/products" class="nav-icon">
+          🏪 <span class="nav-text">商品管理</span>
+        </router-link>
+        <router-link to="/merchant/stock" class="nav-icon">
+          📦 <span class="nav-text">进货管理</span>
+        </router-link>
+        <router-link to="/merchant/orders" class="nav-icon">
+          📋 <span class="nav-text">订单处理</span>
+        </router-link>
+        <router-link to="/merchant/statistics" class="nav-icon">
+          📊 <span class="nav-text">销售统计</span>
+        </router-link>
+      </template>
 
-      <router-link v-if="user" to="/orders" class="nav-icon">
-        📋 <span class="nav-text">我的订单</span>
-      </router-link>
+      <!-- 顾客顶栏 -->
+      <template v-else-if="user?.role === 'customer'">
+        <router-link to="/cart" class="nav-icon">
+          🛒 <span v-if="cartCount > 0" class="cart-badge">{{ cartCount }}</span>
+          <span class="nav-text">购物车</span>
+        </router-link>
+        <router-link to="/orders" class="nav-icon">
+          📋 <span class="nav-text">我的订单</span>
+        </router-link>
+      </template>
 
+      <!-- 夜间模式按钮 -->
       <button @click="toggleTheme" class="theme-btn">
         {{ theme === 'light' ? '🌙' : '☀️' }}
       </button>
 
+      <!-- 用户头像下拉菜单 -->
       <div v-if="user" class="user-menu" @click="toggleMenu">
         <div class="user-avatar">
           {{ user.username?.charAt(0) || '👤' }}
         </div>
         <div v-show="menuVisible" class="dropdown-menu">
-          <div class="dropdown-item" @click="goToProfile">📄 个人中心</div>
-
-          <!-- 普通用户专属 -->
-          <div v-if="user?.role === 'user'" class="dropdown-item" @click="goToOrders">📋 我的订单</div>
-
-          <!-- 商家专属菜单 -->
-          <div v-if="user?.role === 'merchant'" class="dropdown-divider"></div>
-          <div v-if="user?.role === 'merchant'" class="dropdown-item" @click="goToMerchantProducts">
-            🏪 商品管理
+          <div class="dropdown-user">
+            <div class="dropdown-username">{{ user.username }}</div>
           </div>
-          <div v-if="user?.role === 'merchant'" class="dropdown-item" @click="goToMerchantOrders">
-            📦 订单处理
-          </div>
-          <div v-if="user?.role === 'merchant'" class="dropdown-item" @click="goToMerchantStatistics">
-            📊 销售统计
-          </div>
-
-          <!-- 管理员专属菜单 -->
-          <div v-if="user?.role === 'admin'" class="dropdown-divider"></div>
-          <div v-if="user?.role === 'admin'" class="dropdown-item" @click="goToAdminUsers">
-            👥 用户管理
-          </div>
-
           <div class="dropdown-divider"></div>
+          <div class="dropdown-item" @click="goToProfile">📄 个人中心</div>
           <div class="dropdown-item" @click="handleLogout">🚪 退出登录</div>
         </div>
       </div>
@@ -76,12 +80,13 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useTheme } from '../composables/useTheme'
+import { useUser } from '../composables/useUser'
 
 const router = useRouter()
 const keyword = ref('')
 const menuVisible = ref(false)
-const user = ref<{ username: string; role: string; userId: number } | null>(null)
 const { theme, toggleTheme } = useTheme()
+const { user, logout } = useUser()
 
 const cartCount = computed(() => {
   const cart = localStorage.getItem('cart')
@@ -91,10 +96,6 @@ const cartCount = computed(() => {
 })
 
 onMounted(() => {
-  const userStr = localStorage.getItem('user')
-  if (userStr) {
-    user.value = JSON.parse(userStr)
-  }
   document.addEventListener('click', closeMenuOnClickOutside)
 })
 
@@ -122,45 +123,12 @@ function goToProfile() {
   menuVisible.value = false
 }
 
-function goToMerchant() {
-  router.push('/merchant')
-  menuVisible.value = false
-}
-
-function goToAdmin() {
-  router.push('/admin')
-  menuVisible.value = false
-}
-
 function handleLogout() {
-  localStorage.removeItem('user')
-  localStorage.removeItem('cart')
-  user.value = null
+  logout()
   menuVisible.value = false
   alert('已退出登录')
   router.push('/')
 }
-
-function goToMerchantProducts() {
-  router.push('/merchant/products')
-  menuVisible.value = false
-}
-
-function goToMerchantOrders() {
-  router.push('/merchant/orders')
-  menuVisible.value = false
-}
-
-function goToMerchantStatistics() {
-  router.push('/merchant/statistics')
-  menuVisible.value = false
-}
-
-function goToAdminUsers() {
-  router.push('/admin/users')
-  menuVisible.value = false
-}
-
 </script>
 
 <style scoped>
@@ -192,12 +160,6 @@ function goToAdminUsers() {
   flex: 1;
   max-width: 400px;
   margin: 0 20px;
-}
-
-.dropdown-divider {
-  height: 1px;
-  background-color: var(--border-color);
-  margin: 8px 0;
 }
 
 .search-box {
@@ -340,10 +302,10 @@ function goToAdminUsers() {
   background-color: var(--bg-secondary);
 }
 
-.dropdown-item.divider {
-  border-top: 1px solid var(--border-color);
-  padding: 0;
-  margin: 4px 0;
+.dropdown-divider {
+  height: 1px;
+  background-color: var(--border-color);
+  margin: 8px 0;
 }
 
 .login-links {
@@ -379,5 +341,16 @@ function goToAdminUsers() {
 .register-btn:hover {
   background: var(--primary-hover);
   transform: translateY(-1px);
+}
+
+.dropdown-user {
+  padding: 12px 16px;
+  background: var(--bg-secondary);
+}
+
+.dropdown-username {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
 }
 </style>

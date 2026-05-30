@@ -1,7 +1,12 @@
 <template>
   <div>
-    <h2>🛒 购物车</h2>
-    <router-link to="/" class="back-link">← 继续购物</router-link>
+    <div class="page-header">
+      <button class="back-button" @click="goBack">
+        <span class="back-icon"><</span>
+        <span class="back-text">返回</span>
+      </button>
+      <h2 class="page-title">🛒 购物车</h2>
+    </div>
 
     <div v-if="cartItems.length === 0" class="empty-cart">
       购物车是空的，去逛逛吧
@@ -10,7 +15,8 @@
     <div v-else>
       <div v-for="(item, index) in cartItems" :key="index" class="cart-item">
         <div class="cart-item-info">
-          <h3>{{ item.name }}</h3>
+          <h3>{{ item.productName }}</h3>
+          <p class="sku-name">{{ item.skuName }}</p>
           <p>¥{{ item.price }} × {{ item.quantity }}</p>
           <p class="cart-item-subtotal">小计：¥{{ item.price * item.quantity }}</p>
         </div>
@@ -40,8 +46,10 @@ import axios from 'axios'
 import AddressDialog from '../../components/AddressDialog.vue'
 
 interface CartItem {
-  id: number
-  name: string
+  productId: number
+  productName: string
+  skuId: number
+  skuName: string
   price: number
   quantity: number
 }
@@ -102,7 +110,6 @@ async function checkout() {
 
   const user = JSON.parse(userStr)
 
-  // 检查地址
   if (!user.address || user.address.trim() === '') {
     pendingCheckoutUser = user
     showAddressDialog.value = true
@@ -116,7 +123,9 @@ async function doCheckout(user: any) {
   for (const item of cartItems.value) {
     await axios.post('http://localhost:8080/api/orders', {
       userId: user.userId,
-      productId: item.id,
+      productId: item.productId,
+      skuId: item.skuId,
+      skuName: item.skuName,
       quantity: item.quantity,
       totalPrice: item.price * item.quantity
     })
@@ -130,7 +139,6 @@ async function doCheckout(user: any) {
 async function handleAddressConfirm(address: string) {
   const user = pendingCheckoutUser || JSON.parse(localStorage.getItem('user') || '{}')
 
-  // 更新地址
   await axios.put(`http://localhost:8080/api/users/${user.userId}/address`, { address })
   user.address = address
   localStorage.setItem('user', JSON.stringify(user))
@@ -138,13 +146,49 @@ async function handleAddressConfirm(address: string) {
   pendingCheckoutUser = null
   await doCheckout(user)
 }
+
+function goBack() {
+  router.back()
+}
 </script>
 
 <style scoped>
-.back-link {
-  display: inline-block;
-  margin-bottom: 20px;
-  color: var(--primary-color);
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 32px;
+  cursor: pointer;
+  color: var(--text-primary);
+  transition: background 0.2s;
+}
+
+.back-button:hover {
+  background: var(--bg-secondary);
+}
+
+.back-icon {
+  font-size: 20px;
+}
+
+.back-text {
+  font-size: 14px;
+}
+
+.page-title {
+  margin: 0;
+  font-size: 24px;
+  color: var(--text-primary);
 }
 
 .empty-cart {
@@ -173,6 +217,12 @@ async function handleAddressConfirm(address: string) {
 }
 
 .cart-item-info h3 {
+  margin-bottom: 4px;
+}
+
+.sku-name {
+  font-size: 12px;
+  color: var(--text-muted);
   margin-bottom: 8px;
 }
 
